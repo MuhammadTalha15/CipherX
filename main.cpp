@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <windows.h>
+#include <sstream>
 #include <conio.h>
 
 using namespace std;
@@ -16,22 +17,35 @@ string encryptPassword(string character)
     cout << "\nEnter a String\n";
     getline(cin, character);
 
-    cout << "Encodded String is: `";
+    cout << "Encodded String is: ";
     for (char c : character)
     {
-        cout << int(c) << " ";
+        cout << int(c + 1) << " ";
     }
 
     return character;
 }
 
+string dcryptString(const string &cipher)
+{
+    stringstream ss(cipher);
+    string stringResult = "";
+
+    int asciiValue;
+
+    while (ss >> asciiValue)
+    {
+        stringResult += char(asciiValue);
+    }
+
+    return stringResult;
+}
+
 int main()
 {
 
-    // SetConsoleColor(1, 1);
-    // cout << "This text is white on a blue background." << std::endl;
-
     string characterString;
+    string cipherText;
     int userChoice;
 
     cout << "\n";
@@ -64,15 +78,34 @@ int main()
     }
     else if (userChoice == 1)
     {
+    re_encrypt:
         encryptPassword(characterString);
-        getch();
+
+        char Encrypt_Choice;
+
+        cout << "\nDo you want to Encrypt more String (Y/N): ";
+        cin >> Encrypt_Choice;
+        
+        if (Encrypt_Choice == 'Y' || Encrypt_Choice == 'y')
+        {
+            cin.ignore();
+            goto re_encrypt;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else if (userChoice == 2)
+    {
+        cout << "You chose Dcryption!\n";
+        cout << "Enter Cipher to Dcrypt: ";
+        getline(cin, cipherText);
+        cout << dcryptString(cipherText);
     }
     else
     {
-        cout << "You chose Dcryption!";
-        SetConsoleColor(7, 0); // 7 for light grey, 0 for black
-        // std::cout << "This text is the default color." << std::endl;
+        cout << "Invalid Choice";
     }
-
     return 0;
 }
